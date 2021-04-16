@@ -4,6 +4,8 @@ import {GameModel} from "../model/game-model";
 import {GameOverView} from "./component/game-over-view";
 import {BoardView} from "./component/board-view";
 import {Size} from "../../framework/size";
+import {PenaltyView} from "./component/penalty-view";
+import {InfoView} from "./component/info-view";
 
 export class GameView extends View {
   private _gameModel: GameModel;
@@ -19,17 +21,28 @@ export class GameView extends View {
     var bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.width = this.size.width;
     bg.height = this.size.height;
-    bg.tint = 0xffffff;
+    bg.tint = 0x555555;
     this.addChild(bg);
 
+    console.log("point: " + ((this.size.width - 64 * 7) / 2))
+
     const boardView = new BoardView();
-    boardView.position = new PIXI.Point(0, 0);
+    boardView.position = new PIXI.Point((this.size.width - 64 * 7) / 2, 150);
     boardView.size = new Size(64 * 7, 64 * 8);
     boardView.init();
     boardView.renderBoard();
     this.addChild(boardView);
 
+    const infoView = new InfoView();
+    infoView.position = new PIXI.Point(0, 0);
+    infoView.size = new Size(this.size.width, this.size.height);
+    infoView.init();
+    this.addChild(infoView);
 
-    console.log("game view");
+    const penaltyView = new PenaltyView();
+    penaltyView.position = new PIXI.Point(0, 0);
+    penaltyView.size = new Size(this.size.width, this.size.height);
+    penaltyView.init();
+    this.addChild(penaltyView);
   }
 }

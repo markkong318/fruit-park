@@ -5,7 +5,7 @@ import PixiPlugin from "gsap/PixiPlugin";
 import {Application} from "./app/application";
 import * as PIXI from 'pixi.js';
 
-var font = new FontFaceObserver('04b03')
+var font = new FontFaceObserver('press-start-2p-v9-latin')
 font.load()
   .then(() => {
     window.PIXI = PIXI;

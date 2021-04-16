@@ -1,7 +1,7 @@
 export const REEL_WIDTH = 160;
-export const SYMBOL_SIZE = 150;
-export const ONE_PLAY_BET = 10;
-export const INIT_BET = 1000;
+export const SYMBOL_SIZE = 64;
+
+export const TIME = 60;
 
 export const BOARD_COLUMN = 7;
 export const BOARD_ROW = 8;
@@ -27,7 +27,12 @@ export const FRUIT_IDS = [
   FRUIT_ID_5,
 ];
 
+export const EVENT_GAME_START = 'event_game_start';
 export const EVENT_SHUFFLE = 'event_shuffle';
 export const EVENT_RENDER_BOARD = 'event_render_board'
 export const EVENT_CLICK_BOARD = 'event_click_board';
+export const EVENT_RENDER_TIMER = 'event_render_timer';
+export const EVENT_RENDER_SCORE = 'event_render_score';
+export const EVENT_RENDER_PENALTY = 'event_render_penalty';
+export const EVENT_TIME_UP = 'event_time_up';
 

@@ -1,8 +1,8 @@
 import {Model} from "../../framework/model";
-import {INIT_BET} from "../util/env";
 
 export class GameModel extends Model {
   private _playing: boolean = false;
+  private _isPenalty: boolean = false;
 
   private _board: number[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -14,11 +14,14 @@ export class GameModel extends Model {
     [0, 0, 0, 0, 0, 0, 0, 0],
   ];
 
+  private _newPoints: number[][] = [];
+  private _oldPoints: number[][] = [];
 
 
   private _score: number = 0;
-  private _scoreGain: number = 0;
+  private _scorePlus: number = 0;
 
+  private _time: number = 0;
 
   constructor() {
     super();
@@ -33,12 +36,36 @@ export class GameModel extends Model {
     return this._playing;
   }
 
+  public set isPenalty(isPenalty: boolean) {
+    this._isPenalty = isPenalty;
+  }
+
+  public get isPenalty() {
+    return this._isPenalty;
+  }
+
   public set board(board: number[][]) {
     this._board = board;
   }
 
   public get board() {
     return this._board;
+  }
+
+  public set newPoints(newPoints: number[][]) {
+    this._newPoints = newPoints;
+  }
+
+  public get newPoints() {
+    return this._newPoints;
+  }
+
+  public set oldPoints(oldPoints: number[][]) {
+    this._oldPoints = oldPoints;
+  }
+
+  public get oldPoints() {
+    return this._oldPoints;
   }
 
   public set score(score: number) {
@@ -49,11 +76,19 @@ export class GameModel extends Model {
     return this._score;
   }
 
-  public set scoreGain(scoreGain: number) {
-    this._scoreGain = scoreGain;
+  public set scorePlus(scorePlus: number) {
+    this._scorePlus = scorePlus;
   }
 
-  public get scoreGain() {
-    return this._scoreGain;
+  public get scorePlus() {
+    return this._scorePlus;
+  }
+
+  public set time(time: number) {
+    this._time = time;
+  }
+
+  public get time() {
+    return this._time;
   }
 }

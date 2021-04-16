@@ -2,30 +2,36 @@ import {Controller} from "../../framework/controller";
 import {GameModel} from "../model/game-model";
 import Bottle from "../../framework/bottle";
 import {
-  EVENT_CLICK_BOARD,
-  EVENT_RENDER_BOARD,
-  FRUIT_ID_1,
-  FRUIT_ID_2,
-  FRUIT_ID_3,
-  FRUIT_ID_4,
-  FRUIT_ID_5,
-  FRUIT_IDS
+  EVENT_CLICK_BOARD, EVENT_GAME_START,
+  EVENT_RENDER_BOARD, EVENT_RENDER_TIMER, EVENT_SHUFFLE, EVENT_TIME_UP,
+  FRUIT_IDS, TIME
 } from "../util/env";
 import Event from "../../framework/event";
 
 export class GameController extends Controller {
   private _gameModel: GameModel;
 
-
-
   constructor() {
     super();
 
     this._gameModel = Bottle.get('gameModel');
 
+    Event.on(EVENT_SHUFFLE, () => {
+      this.shuffle();
+      Event.emit(EVENT_RENDER_BOARD);
+    });
+
+    Event.on(EVENT_GAME_START, () => {
+      this.countdown();
+    });
+
     Event.on(EVENT_CLICK_BOARD, (x, y) => {
-      console.log("x: " + x + ",y: " + y);
-      this.click(x, y);
+      if (!this.tryClick(x, y)) {
+        return;
+      }
+
+      this.refresh();
+      Event.emit(EVENT_RENDER_BOARD);
     });
   }
 
@@ -41,12 +47,12 @@ export class GameController extends Controller {
     console.log(board)
   }
 
-  public click(x, y) {
+  public tryClick(x, y) {
+    this._gameModel.oldPoints = [];
+
     const board = this._gameModel.board;
-
-    const id = board[x][y];
-
-    const points = new Map();
+    const fruitId = board[x][y];
+    const map = new Map();
 
     const find = (x, y) => {
       if (x < 0 ||
@@ -56,15 +62,15 @@ export class GameController extends Controller {
         return;
       }
 
-      if (board[x][y] != id) {
+      if (board[x][y] != fruitId) {
         return;
       }
 
-      if (points.has([x, y].toString())) {
+      if (map.has([x, y].toString())) {
         return;
       }
 
-      points.set([x, y].toString(), [x, y]);
+      map.set([x, y].toString(), [x, y]);
 
       find(x - 1, y);
       find(x + 1, y);
@@ -74,44 +80,52 @@ export class GameController extends Controller {
 
     find(x, y);
 
-    const emptyPoints = Array.from(points.values());
+    const oldPoints = Array.from(map.values());
 
-    if (emptyPoints.length < 2) {
-      return;
+    if (oldPoints.length < 2) {
+      return false;
     }
 
-    for (let i = 0; i < emptyPoints.length; i++) {
-      const [x, y] = emptyPoints[i];
+    for (let i = 0; i < oldPoints.length; i++) {
+      const [x, y] = oldPoints[i];
       board[x][y] = 0;
     }
 
-    // console.log(board);
+    this._gameModel.oldPoints = oldPoints;
+
+    return true;
+  }
+
+  public refresh() {
+    this._gameModel.newPoints = [];
+
+    const board = this._gameModel.board;
 
     for (let i = 0; i < board.length; i++) {
-      let idx = board[i].length - 1;
+      let nonZeroIdx = board[i].length - 1;
       let zeroIdx = board[i].length - 1;
       for (let j = board[i].length - 1; j >= 0; j--) {
         if (board[i][j] == 0) {
-          idx = j;
+          nonZeroIdx = j;
           zeroIdx = j;
           break;
         }
       }
 
-      while(idx >= 0) {
-        if (board[i][idx] == 0) {
+      while(nonZeroIdx >= 0) {
+        if (board[i][nonZeroIdx] == 0) {
           break;
         }
 
-        idx--;
+        nonZeroIdx--;
         zeroIdx--;
       }
 
-      if (idx == -1) {
+      if (nonZeroIdx == -1) {
         continue;
       }
 
-      for (let j = idx - 1; j >= 0; j--) {
+      for (let j = nonZeroIdx - 1; j >= 0; j--) {
         if (board[i][j] == 0) {
           continue;
         }
@@ -123,7 +137,7 @@ export class GameController extends Controller {
       }
     }
 
-    console.log(board);
+    const newPoints = [];
 
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board[i].length; j++) {
@@ -132,9 +146,30 @@ export class GameController extends Controller {
         }
 
         board[i][j] = FRUIT_IDS[Math.floor(Math.random() * FRUIT_IDS.length)];
+        newPoints.push([i, j]);
       }
     }
 
-    Event.emit(EVENT_RENDER_BOARD);
+    this._gameModel.newPoints = newPoints;
+  }
+
+  public countdown() {
+    this._gameModel.time = TIME;
+
+    const loop = () => {
+      console.log(">>>" + this._gameModel.time)
+      if (!this._gameModel.time) {
+        Event.emit(EVENT_TIME_UP);
+        return;
+      }
+
+      this._gameModel.time--;
+      console.log(this._gameModel.time)
+      Event.emit(EVENT_RENDER_TIMER);
+
+      setTimeout(loop, 1000);
+    }
+
+    loop();
   }
 }

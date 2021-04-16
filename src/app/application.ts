@@ -10,7 +10,10 @@ import {GameModel} from "./model/game-model";
 import {GameController} from "./controller/game-controller";
 import {Size} from "../framework/size";
 import Bottle from "../framework/bottle";
+import Event from "../framework/event";
 import {
+  EVENT_GAME_START,
+  EVENT_SHUFFLE,
   FRUIT_ID_1,
   FRUIT_ID_2,
   FRUIT_ID_3, FRUIT_ID_4, FRUIT_ID_5,
@@ -59,7 +62,6 @@ export class Application extends PIXI.Application {
     Bottle.set('gameModel', this._gameModel);
 
     this._gameController = new GameController();
-    this._gameController.shuffle();
 
     this._gameView = new GameView();
     this._gameView.size = new Size(480, 800);
@@ -68,6 +70,9 @@ export class Application extends PIXI.Application {
     this.stage.addChild(this._gameView);
 
     this.resizeView();
+
+    Event.emit(EVENT_SHUFFLE);
+    Event.emit(EVENT_GAME_START);
   }
 
   public resizeView(): void {
