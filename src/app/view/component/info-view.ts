@@ -8,7 +8,7 @@ import {
   BOARD_COLUMN,
   BOARD_ROW,
   EVENT_CLICK_BOARD,
-  EVENT_RENDER_BOARD, EVENT_RENDER_SCORE,
+  EVENT_RENDER_BOARD, EVENT_RENDER_POW, EVENT_RENDER_SCORE,
   EVENT_RENDER_TIMER,
   FRUIT_ID_1
 } from "../../util/env";
@@ -26,6 +26,7 @@ export class InfoView extends View {
   private _pow: PIXI.Text;
 
   private _scoreTimeline: gsap.core.Timeline;
+  private _powTimeline: gsap.core.Timeline;
 
   constructor() {
     super();
@@ -39,6 +40,10 @@ export class InfoView extends View {
     Event.on(EVENT_RENDER_SCORE, () => {
       this.renderScore();
     });
+
+    Event.on(EVENT_RENDER_POW, () => {
+      this.renderPow();
+    })
   }
 
   public init() {
@@ -59,10 +64,11 @@ export class InfoView extends View {
     this.addChild(this._timeValue);
 
     this._pow = new PIXI.Text('0.00%', titleStyle);
-    this._pow.position = new PIXI.Point((this.size.width - this._pow.width) / 2, 150)
+    this._pow.position = new PIXI.Point((this.size.width - this._pow.width) / 2, 150);
     this.addChild(this._pow);
 
     this._scoreTimeline = gsap.timeline();
+    this._powTimeline = gsap.timeline();
   }
 
   public renderScore() {
@@ -72,15 +78,15 @@ export class InfoView extends View {
     this._scoreTimeline
       .clear()
       .to({
-          score: score - scorePlus,
+          val: score - scorePlus,
         },
         {
-          score: score,
+          val: score,
           duration: 0.5,
           onUpdate: function(text: PIXI.Text) {
-            const { score } = this.targets()[0];
+            const { val } = this.targets()[0];
 
-            text.text = `${Math.floor(score)}`.padStart(8, '0');
+            text.text = `${Math.floor(val)}`.padStart(8, '0');
           },
           onUpdateParams:[this._scoreValue],
         });
@@ -91,6 +97,26 @@ export class InfoView extends View {
   }
 
   public renderPow() {
+    const pow = this._gameModel.pow;
+    const powPlus = this._gameModel.powPlus;
 
+    console.log("pow:" + pow + ",+ " + powPlus);
+
+    this._powTimeline
+      .clear()
+      .to({
+          val: pow - powPlus,
+        },
+        {
+          val: pow,
+          duration: 0.5,
+          onUpdate: function(text: PIXI.Text, viewWidth, ) {
+            const { val } = this.targets()[0];
+
+            text.text = `${(Math.floor(val * 10) / 10).toFixed(1)}%`;
+            text.position = new PIXI.Point((viewWidth - text.width) / 2, 150);
+          },
+          onUpdateParams:[this._pow, this.size.width],
+        });
   }
 }

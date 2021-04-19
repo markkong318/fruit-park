@@ -3,6 +3,7 @@ import {Model} from "../../framework/model";
 export class GameModel extends Model {
   private _playing: boolean = false;
   private _isPenalty: boolean = false;
+  private _isPow: boolean = false;
 
   private _board: number[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -93,6 +94,22 @@ export class GameModel extends Model {
 
   public get scorePlus() {
     return this._scorePlus;
+  }
+
+  public set pow(pow: number) {
+    this._pow = pow;
+  }
+
+  public get pow() {
+    return this._pow;
+  }
+
+  public set powPlus(powPlus: number) {
+    this._powPlus = powPlus;
+  }
+
+  public get powPlus() {
+    return this._powPlus;
   }
 
   public set time(time: number) {

@@ -2,9 +2,17 @@ import {Controller} from "../../framework/controller";
 import {GameModel} from "../model/game-model";
 import Bottle from "../../framework/bottle";
 import {
-  EVENT_CLICK_BOARD, EVENT_GAME_START,
-  EVENT_RENDER_BOARD, EVENT_RENDER_SCORE, EVENT_RENDER_TIMER, EVENT_SHUFFLE, EVENT_TIME_UP,
-  FRUIT_IDS, TIME
+  EVENT_CLICK_BOARD,
+  EVENT_GAME_START,
+  EVENT_RENDER_BOARD,
+  EVENT_RENDER_PENALTY,
+  EVENT_RENDER_POW,
+  EVENT_RENDER_SCORE,
+  EVENT_RENDER_TIMER,
+  EVENT_SHUFFLE,
+  EVENT_TIME_UP,
+  FRUIT_IDS,
+  TIME
 } from "../util/env";
 import Event from "../../framework/event";
 
@@ -32,6 +40,7 @@ export class GameController extends Controller {
 
       this.refresh();
       this.updateScore();
+      this.updatePow();
 
       Event.emit(EVENT_RENDER_BOARD);
       Event.emit(EVENT_RENDER_SCORE);
@@ -87,6 +96,7 @@ export class GameController extends Controller {
     const points = Array.from(map.values());
 
     if (points.length < 2) {
+      this.penalize();
       return false;
     }
 
@@ -159,26 +169,57 @@ export class GameController extends Controller {
   }
 
   public updateScore() {
-    const score = this._gameModel.oldPoints.length * 100;
+    const scorePlus = this._gameModel.oldPoints.length * 100;
 
-    console.log("score: " + score);
+    this._gameModel.score += scorePlus;
+    this._gameModel.scorePlus = scorePlus;
+  }
 
-    this._gameModel.score += score;
-    this._gameModel.scorePlus = score;
+  public updatePow() {
+    if (this._gameModel.pow === 100) {
+      this._gameModel.powPlus = 0;
+      return;
+    }
+
+    const powPlus = Math.round(this._gameModel.oldPoints.length * 2.4 * 10) / 10;
+
+    if (this._gameModel.pow + powPlus > 100) {
+      this._gameModel.pow = 100
+      this._gameModel.powPlus = this._gameModel.pow + powPlus - 100;
+
+      Event.emit(EVENT_RENDER_POW);
+      return;
+    }
+
+    this._gameModel.pow = this._gameModel.pow + powPlus;
+    this._gameModel.powPlus = powPlus;
+
+    Event.emit(EVENT_RENDER_POW);
+    return;
+  }
+
+  public penalize() {
+    this._gameModel.isPenalty = true;
+
+    setTimeout(() => {
+      this._gameModel.isPenalty = false;
+
+      Event.emit(EVENT_RENDER_PENALTY);
+    }, 1000);
+
+    Event.emit(EVENT_RENDER_PENALTY);
   }
 
   public countdown() {
     this._gameModel.time = TIME;
 
     const loop = () => {
-      console.log(">>>" + this._gameModel.time)
       if (!this._gameModel.time) {
         Event.emit(EVENT_TIME_UP);
         return;
       }
 
       this._gameModel.time--;
-      console.log(this._gameModel.time)
       Event.emit(EVENT_RENDER_TIMER);
 
       setTimeout(loop, 1000);

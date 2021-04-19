@@ -32,7 +32,7 @@ export class BoardView extends View {
 
     Event.on(EVENT_RENDER_BOARD, () => {
       this.renderBoard();
-      this.renderNewPoints();
+      this.renderPoints();
     });
   }
 
@@ -89,7 +89,7 @@ export class BoardView extends View {
     }
   }
 
-  public renderNewPoints() {
+  public renderPoints() {
     this._timeline.clear();
 
     const newPoints = this._gameModel.newPoints;

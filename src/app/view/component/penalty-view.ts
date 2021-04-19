@@ -16,8 +16,8 @@ export class PenaltyView extends View {
 
     this._gameModel = Bottle.get('gameModel');
 
-    event.addListener(EVENT_RENDER_PENALTY, () => {
-      this.render();
+    event.on(EVENT_RENDER_PENALTY, () => {
+      this.renderMask();
     });
   }
 
@@ -31,7 +31,8 @@ export class PenaltyView extends View {
     this.visible = false;
   }
 
-  public render() {
+  public renderMask() {
+    console.log("render penalty")
     this.visible = this._gameModel.isPenalty;
   }
 }
