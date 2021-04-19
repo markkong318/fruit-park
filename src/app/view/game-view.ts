@@ -24,11 +24,11 @@ export class GameView extends View {
     bg.tint = 0x555555;
     this.addChild(bg);
 
-    console.log("point: " + ((this.size.width - 64 * 7) / 2))
+    console.log("point: " + ((this.size.width - SYMBOL_SIZE * 7) / 2))
 
     const boardView = new BoardView();
-    boardView.position = new PIXI.Point((this.size.width - 64 * 7) / 2, 150);
-    boardView.size = new Size(64 * 7, 64 * 8);
+    boardView.position = new PIXI.Point((this.size.width - SYMBOL_SIZE * 7) / 2, 200);
+    boardView.size = new Size(SYMBOL_SIZE * 7, SYMBOL_SIZE * 8);
     boardView.init();
     boardView.renderBoard();
     this.addChild(boardView);

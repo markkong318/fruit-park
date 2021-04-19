@@ -116,16 +116,24 @@ export class BoardView extends View {
     for (let i = 0; i < oldPoints.length; i++) {
       const [x, y] = oldPoints[i];
 
-      const sprite = this._oldSprites[i];
-      const scale = sprite.scale.x;
+      const sprite = this._oldSprites[x][y];
+      const scale = this._boardSprites[x][y].scale.x;
+
+      sprite.texture = Bottle.get(`fruit_texture_${this._gameModel.oldFruitId}`);
+      sprite.alpha = 1;
+      sprite.scale.x = scale;
 
       this._timeline
         .to(sprite, {
           duration: 0.2,
           pixi: {
-            scaleX: scale,
-            scaleY: scale,
+            scaleX: scale * 1.5,
+            scaleY: scale * 1.5,
+            alpha: 0.5,
           },
+          onComplete: function () {
+            sprite.alpha = 0;
+          }
         }, 0);
     }
   }

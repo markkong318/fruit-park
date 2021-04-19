@@ -16,10 +16,13 @@ export class GameModel extends Model {
 
   private _newPoints: number[][] = [];
   private _oldPoints: number[][] = [];
-
+  private _oldFruitId: number = 1;
 
   private _score: number = 0;
   private _scorePlus: number = 0;
+
+  private _pow: number = 0;
+  private _powPlus: number = 0;
 
   private _time: number = 0;
 
@@ -66,6 +69,14 @@ export class GameModel extends Model {
 
   public get oldPoints() {
     return this._oldPoints;
+  }
+
+  public set oldFruitId(oldFruitId: number) {
+    this._oldFruitId = oldFruitId;
+  }
+
+  public get oldFruitId() {
+    return this._oldFruitId;
   }
 
   public set score(score: number) {

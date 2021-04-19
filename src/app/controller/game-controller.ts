@@ -3,7 +3,7 @@ import {GameModel} from "../model/game-model";
 import Bottle from "../../framework/bottle";
 import {
   EVENT_CLICK_BOARD, EVENT_GAME_START,
-  EVENT_RENDER_BOARD, EVENT_RENDER_TIMER, EVENT_SHUFFLE, EVENT_TIME_UP,
+  EVENT_RENDER_BOARD, EVENT_RENDER_SCORE, EVENT_RENDER_TIMER, EVENT_SHUFFLE, EVENT_TIME_UP,
   FRUIT_IDS, TIME
 } from "../util/env";
 import Event from "../../framework/event";
@@ -31,7 +31,10 @@ export class GameController extends Controller {
       }
 
       this.refresh();
+      this.updateScore();
+
       Event.emit(EVENT_RENDER_BOARD);
+      Event.emit(EVENT_RENDER_SCORE);
     });
   }
 
@@ -49,6 +52,7 @@ export class GameController extends Controller {
 
   public tryClick(x, y) {
     this._gameModel.oldPoints = [];
+    this._gameModel.oldFruitId = 1;
 
     const board = this._gameModel.board;
     const fruitId = board[x][y];
@@ -80,18 +84,19 @@ export class GameController extends Controller {
 
     find(x, y);
 
-    const oldPoints = Array.from(map.values());
+    const points = Array.from(map.values());
 
-    if (oldPoints.length < 2) {
+    if (points.length < 2) {
       return false;
     }
 
-    for (let i = 0; i < oldPoints.length; i++) {
-      const [x, y] = oldPoints[i];
+    for (let i = 0; i < points.length; i++) {
+      const [x, y] = points[i];
       board[x][y] = 0;
     }
 
-    this._gameModel.oldPoints = oldPoints;
+    this._gameModel.oldPoints = points;
+    this._gameModel.oldFruitId = fruitId;
 
     return true;
   }
@@ -151,6 +156,15 @@ export class GameController extends Controller {
     }
 
     this._gameModel.newPoints = newPoints;
+  }
+
+  public updateScore() {
+    const score = this._gameModel.oldPoints.length * 100;
+
+    console.log("score: " + score);
+
+    this._gameModel.score += score;
+    this._gameModel.scorePlus = score;
   }
 
   public countdown() {
