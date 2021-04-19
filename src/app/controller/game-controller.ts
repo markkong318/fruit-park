@@ -3,10 +3,10 @@ import {GameModel} from "../model/game-model";
 import Bottle from "../../framework/bottle";
 import {
   EVENT_CLICK_BOARD,
-  EVENT_GAME_START,
+  EVENT_GAME_START, EVENT_POW_PLAY, EVENT_POW_PLAY_DONE,
   EVENT_RENDER_BOARD,
   EVENT_RENDER_PENALTY,
-  EVENT_RENDER_POW,
+  EVENT_RENDER_POW, EVENT_RENDER_POW_PLAY,
   EVENT_RENDER_SCORE,
   EVENT_RENDER_TIMER,
   EVENT_SHUFFLE,
@@ -44,6 +44,14 @@ export class GameController extends Controller {
 
       Event.emit(EVENT_RENDER_BOARD);
       Event.emit(EVENT_RENDER_SCORE);
+    });
+
+    Event.on(EVENT_POW_PLAY, () => {
+      this.updatePowPlay();
+    });
+
+    Event.on(EVENT_POW_PLAY_DONE, () => {
+      this.updatePowPlayDone();
     });
   }
 
@@ -160,7 +168,11 @@ export class GameController extends Controller {
           break;
         }
 
-        board[i][j] = FRUIT_IDS[Math.floor(Math.random() * FRUIT_IDS.length)];
+        if (this._gameModel.isPlayPow) {
+          board[i][j] = this._gameModel.powFruitId;
+        } else {
+          board[i][j] = FRUIT_IDS[Math.floor(Math.random() * FRUIT_IDS.length)];
+        }
         newPoints.push([i, j]);
       }
     }
@@ -176,6 +188,10 @@ export class GameController extends Controller {
   }
 
   public updatePow() {
+    if (this._gameModel.isPlayPow) {
+      return;
+    }
+
     if (this._gameModel.pow === 100) {
       this._gameModel.powPlus = 0;
       return;
@@ -183,11 +199,13 @@ export class GameController extends Controller {
 
     const powPlus = Math.round(this._gameModel.oldPoints.length * 2.4 * 10) / 10;
 
-    if (this._gameModel.pow + powPlus > 100) {
+    if (this._gameModel.pow + powPlus >= 100) {
       this._gameModel.pow = 100
       this._gameModel.powPlus = this._gameModel.pow + powPlus - 100;
 
       Event.emit(EVENT_RENDER_POW);
+      Event.emit(EVENT_POW_PLAY);
+
       return;
     }
 
@@ -196,6 +214,20 @@ export class GameController extends Controller {
 
     Event.emit(EVENT_RENDER_POW);
     return;
+  }
+
+  public updatePowPlay() {
+    console.log("updatePowPlay");
+    this._gameModel.isPlayPow = true;
+    this._gameModel.powFruitId = FRUIT_IDS[Math.floor(Math.random() * FRUIT_IDS.length)];
+
+    Event.emit(EVENT_RENDER_POW_PLAY);
+  }
+
+  public updatePowPlayDone() {
+    this._gameModel.isPlayPow = false;
+    this._gameModel.pow = 0;
+    this._gameModel.powPlus = 0;
   }
 
   public penalize() {

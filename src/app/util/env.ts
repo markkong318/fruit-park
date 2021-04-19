@@ -35,5 +35,8 @@ export const EVENT_RENDER_TIMER = 'event_render_timer';
 export const EVENT_RENDER_SCORE = 'event_render_score';
 export const EVENT_RENDER_PENALTY = 'event_render_penalty';
 export const EVENT_RENDER_POW = 'event_render_pow';
+export const EVENT_RENDER_POW_PLAY = 'event_render_pow_play';
+export const EVENT_POW_PLAY = 'event_pow_play';
+export const EVENT_POW_PLAY_DONE = 'event_pow_play_done';
 export const EVENT_TIME_UP = 'event_time_up';
 

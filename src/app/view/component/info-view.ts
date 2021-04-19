@@ -7,8 +7,8 @@ import {GameModel} from "../../model/game-model";
 import {
   BOARD_COLUMN,
   BOARD_ROW,
-  EVENT_CLICK_BOARD,
-  EVENT_RENDER_BOARD, EVENT_RENDER_POW, EVENT_RENDER_SCORE,
+  EVENT_CLICK_BOARD, EVENT_POW_PLAY_DONE,
+  EVENT_RENDER_BOARD, EVENT_RENDER_POW, EVENT_RENDER_POW_PLAY, EVENT_RENDER_SCORE,
   EVENT_RENDER_TIMER,
   FRUIT_ID_1
 } from "../../util/env";
@@ -43,7 +43,11 @@ export class InfoView extends View {
 
     Event.on(EVENT_RENDER_POW, () => {
       this.renderPow();
-    })
+    });
+
+    Event.on(EVENT_RENDER_POW_PLAY, () => {
+      this.renderPowPlay();
+    });
   }
 
   public init() {
@@ -100,10 +104,7 @@ export class InfoView extends View {
     const pow = this._gameModel.pow;
     const powPlus = this._gameModel.powPlus;
 
-    console.log("pow:" + pow + ",+ " + powPlus);
-
     this._powTimeline
-      .clear()
       .to({
           val: pow - powPlus,
         },
@@ -117,6 +118,31 @@ export class InfoView extends View {
             text.position = new PIXI.Point((viewWidth - text.width) / 2, 150);
           },
           onUpdateParams:[this._pow, this.size.width],
+        });
+  }
+
+  public renderPowPlay() {
+    if (!this._gameModel.isPlayPow) {
+      return;
+    }
+
+    this._powTimeline
+      .to({
+          val: 100,
+        },
+        {
+          val: 0,
+          duration: 10,
+          onUpdate: function(text: PIXI.Text, viewWidth, ) {
+            const { val } = this.targets()[0];
+
+            text.text = `${(Math.floor(val * 10) / 10).toFixed(1)}%`;
+            text.position = new PIXI.Point((viewWidth - text.width) / 2, 150);
+          },
+          onUpdateParams:[this._pow, this.size.width],
+          onComplete: function() {
+            Event.emit(EVENT_POW_PLAY_DONE);
+          },
         });
   }
 }

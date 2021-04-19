@@ -1,9 +1,9 @@
 import {Model} from "../../framework/model";
 
 export class GameModel extends Model {
-  private _playing: boolean = false;
+  private _isPlaying: boolean = false;
   private _isPenalty: boolean = false;
-  private _isPow: boolean = false;
+  private _isPlayPow: boolean = false;
 
   private _board: number[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -24,6 +24,7 @@ export class GameModel extends Model {
 
   private _pow: number = 0;
   private _powPlus: number = 0;
+  private _powFruitId: number = 1;
 
   private _time: number = 0;
 
@@ -32,12 +33,12 @@ export class GameModel extends Model {
 
   }
 
-  public set playing(playing: boolean) {
-    this._playing = playing;
+  public set isPlaying(playing: boolean) {
+    this._isPlaying = playing;
   }
 
-  public get playing() {
-    return this._playing;
+  public get isPlaying() {
+    return this._isPlaying;
   }
 
   public set isPenalty(isPenalty: boolean) {
@@ -46,6 +47,14 @@ export class GameModel extends Model {
 
   public get isPenalty() {
     return this._isPenalty;
+  }
+
+  public set isPlayPow(isPlayPow: boolean) {
+    this._isPlayPow = isPlayPow;
+  }
+
+  public get isPlayPow() {
+    return this._isPlayPow;
   }
 
   public set board(board: number[][]) {
@@ -110,6 +119,14 @@ export class GameModel extends Model {
 
   public get powPlus() {
     return this._powPlus;
+  }
+
+  public set powFruitId(powFruitId: number) {
+    this._powFruitId = powFruitId;
+  }
+
+  public get powFruitId() {
+    return this._powFruitId;
   }
 
   public set time(time: number) {
