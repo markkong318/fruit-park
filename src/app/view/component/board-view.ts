@@ -11,6 +11,7 @@ export class BoardView extends View {
   private _gameModel: GameModel;
 
   private _boardSprites: PIXI.Sprite[][];
+  private _newSprites: PIXI.Sprite[][];
   private _oldSprites: PIXI.Sprite[][];
   private _timeline: gsap.core.Timeline;
 
@@ -23,6 +24,11 @@ export class BoardView extends View {
     this._boardSprites = new Array(BOARD_COLUMN);
     for (let i = 0; i < BOARD_COLUMN; i++) {
       this._boardSprites[i] = new Array(BOARD_ROW);
+    }
+
+    this._newSprites = new Array(BOARD_COLUMN);
+    for (let i = 0; i < BOARD_COLUMN; i++) {
+      this._newSprites[i] = new Array(BOARD_ROW);
     }
 
     this._oldSprites = new Array(BOARD_COLUMN);
@@ -72,6 +78,23 @@ export class BoardView extends View {
         sprite.anchor.y = 0.5;
         sprite.alpha = 0;
 
+        this._newSprites[i][j] = sprite;
+
+        this.addChild(sprite);
+      }
+    }
+
+    for (let i = 0; i < BOARD_COLUMN; i++) {
+      for (let j = 0; j < BOARD_ROW; j++) {
+        const sprite = new PIXI.Sprite(texture);
+
+        sprite.x = i * SYMBOL_SIZE + 32;
+        sprite.y = j * SYMBOL_SIZE + 32;
+        sprite.scale.x = sprite.scale.y = Math.min(SYMBOL_SIZE / sprite.width, SYMBOL_SIZE / sprite.height);
+        sprite.anchor.x = 0.5;
+        sprite.anchor.y = 0.5;
+        sprite.alpha = 0;
+
         this._oldSprites[i][j] = sprite;
 
         this.addChild(sprite);
@@ -96,18 +119,28 @@ export class BoardView extends View {
     for (let i = 0; i < newPoints.length; i++) {
       const [x, y] = newPoints[i];
 
-      const sprite = this._boardSprites[x][y];
-      const scale = sprite.scale.x;
+      const boardSprite = this._boardSprites[x][y];
+      const newSprite = this._newSprites[x][y];
 
-      sprite.scale.x = scale * 0.5;
-      sprite.scale.y = scale * 0.5;
+      const scale = boardSprite.scale.x;
+
+      boardSprite.alpha = 0;
+
+      newSprite.alpha = 1;
+      newSprite.texture = boardSprite.texture;
+      newSprite.scale.x = scale * 0.5;
+      newSprite.scale.y = scale * 0.5;
 
       this._timeline
-        .to(sprite, {
+        .to(newSprite, {
           duration: 0.2,
           pixi: {
             scaleX: scale,
             scaleY: scale,
+          },
+          onComplete: function() {
+            boardSprite.alpha = 1;
+            newSprite.alpha = 0;
           },
         }, 0);
     }

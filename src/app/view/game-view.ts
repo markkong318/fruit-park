@@ -1,5 +1,5 @@
 import {View} from "../../framework/view";
-import {SYMBOL_SIZE, REEL_WIDTH} from "../util/env";
+import {SYMBOL_SIZE} from "../util/env";
 import {GameModel} from "../model/game-model";
 import {GameOverView} from "./component/game-over-view";
 import {BoardView} from "./component/board-view";
@@ -21,7 +21,7 @@ export class GameView extends View {
     var bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.width = this.size.width;
     bg.height = this.size.height;
-    bg.tint = 0x555555;
+    bg.tint = 0x333333;
     this.addChild(bg);
 
     console.log("point: " + ((this.size.width - SYMBOL_SIZE * 7) / 2))
