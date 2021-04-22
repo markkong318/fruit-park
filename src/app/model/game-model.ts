@@ -1,4 +1,5 @@
 import {Model} from "../../framework/model";
+import {FRUIT_IDS} from "../util/env";
 
 export class GameModel extends Model {
   private _isPlaying: boolean = false;
@@ -15,12 +16,16 @@ export class GameModel extends Model {
     [0, 0, 0, 0, 0, 0, 0, 0],
   ];
 
+  private _fruitCounts: number[] = [];
+
   private _newPoints: number[][] = [];
   private _oldPoints: number[][] = [];
   private _oldFruitId: number = 1;
 
   private _score: number = 0;
   private _scorePlus: number = 0;
+
+  private _totalScore: number = 0;
 
   private _pow: number = 0;
   private _powPlus: number = 0;
@@ -31,6 +36,9 @@ export class GameModel extends Model {
   constructor() {
     super();
 
+    for (let i = 0; i < FRUIT_IDS.length; i++) {
+      this._fruitCounts[i] = 0;
+    }
   }
 
   public set isPlaying(playing: boolean) {
@@ -63,6 +71,14 @@ export class GameModel extends Model {
 
   public get board() {
     return this._board;
+  }
+
+  public set fruitCounts(fruitCounts: number[]) {
+    this._fruitCounts = fruitCounts;
+  }
+
+  public get fruitCounts() {
+    return this._fruitCounts;
   }
 
   public set newPoints(newPoints: number[][]) {
@@ -103,6 +119,14 @@ export class GameModel extends Model {
 
   public get scorePlus() {
     return this._scorePlus;
+  }
+
+  public set totalScore(totalScore: number) {
+    this._totalScore = totalScore;
+  }
+
+  public get totalScore() {
+    return this._totalScore;
   }
 
   public set pow(pow: number) {

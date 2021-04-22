@@ -2,16 +2,15 @@ import {Controller} from "../../framework/controller";
 import {GameModel} from "../model/game-model";
 import Bottle from "../../framework/bottle";
 import {
-  EVENT_CLICK_BOARD,
+  EVENT_CLICK_BOARD, EVENT_GAME_OVER,
   EVENT_GAME_START, EVENT_POW_PLAY, EVENT_POW_PLAY_DONE,
   EVENT_RENDER_BOARD,
   EVENT_RENDER_PENALTY,
   EVENT_RENDER_POW, EVENT_RENDER_POW_PLAY,
   EVENT_RENDER_SCORE,
   EVENT_RENDER_TIMER,
-  EVENT_SHUFFLE,
-  EVENT_TIME_UP,
-  FRUIT_IDS,
+  EVENT_SHUFFLE, EVENT_TIME_UP, FRUIT_BONUSES,
+  FRUIT_IDS, FRUIT_POW, FRUIT_SCORE,
   TIME
 } from "../util/env";
 import Event from "../../framework/event";
@@ -52,6 +51,12 @@ export class GameController extends Controller {
 
     Event.on(EVENT_POW_PLAY_DONE, () => {
       this.updatePowPlayDone();
+    });
+
+    Event.on(EVENT_TIME_UP, () => {
+      this.updateTotalScore();
+
+      Event.emit(EVENT_GAME_OVER);
     });
   }
 
@@ -115,6 +120,7 @@ export class GameController extends Controller {
 
     this._gameModel.oldPoints = points;
     this._gameModel.oldFruitId = fruitId;
+    this._gameModel.fruitCounts[fruitId] += points.length;
 
     return true;
   }
@@ -181,7 +187,7 @@ export class GameController extends Controller {
   }
 
   public updateScore() {
-    const scorePlus = this._gameModel.oldPoints.length * 100;
+    const scorePlus = this._gameModel.oldPoints.length * FRUIT_SCORE;
 
     this._gameModel.score += scorePlus;
     this._gameModel.scorePlus = scorePlus;
@@ -197,7 +203,7 @@ export class GameController extends Controller {
       return;
     }
 
-    const powPlus = Math.round(this._gameModel.oldPoints.length * 2.4 * 10) / 10;
+    const powPlus = Math.round(this._gameModel.oldPoints.length * FRUIT_POW * 10) / 10;
 
     if (this._gameModel.pow + powPlus >= 100) {
       this._gameModel.pow = 100
@@ -217,7 +223,6 @@ export class GameController extends Controller {
   }
 
   public updatePowPlay() {
-    console.log("updatePowPlay");
     this._gameModel.isPlayPow = true;
     this._gameModel.powFruitId = FRUIT_IDS[Math.floor(Math.random() * FRUIT_IDS.length)];
 
@@ -258,5 +263,13 @@ export class GameController extends Controller {
     }
 
     loop();
+  }
+
+  public updateTotalScore() {
+    this._gameModel.totalScore = this._gameModel.score;
+
+    for (let i = 0; i < FRUIT_IDS.length; i++) {
+      this._gameModel.totalScore += FRUIT_BONUSES[i] * this._gameModel.fruitCounts[i];
+    }
   }
 }

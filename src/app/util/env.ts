@@ -2,8 +2,19 @@ export const SYMBOL_SIZE = 64;
 
 export const TIME = 60;
 
+export const FRUIT_SCORE = 100;
+export const FRUIT_POW = 2.4;
+
 export const BOARD_COLUMN = 7;
 export const BOARD_ROW = 8;
+
+export const FRUIT_BONUSES = [
+  1,
+  10,
+  100,
+  1000,
+  10000,
+];
 
 export const FRUIT_NAME_1 = 'fruit_1';
 export const FRUIT_NAME_2 = 'fruit_2';
@@ -27,6 +38,8 @@ export const FRUIT_IDS = [
 ];
 
 export const EVENT_GAME_START = 'event_game_start';
+export const EVENT_GAME_READY = 'event_game_ready';
+export const EVENT_GAME_OVER = 'event_game_over';
 export const EVENT_SHUFFLE = 'event_shuffle';
 export const EVENT_RENDER_BOARD = 'event_render_board'
 export const EVENT_CLICK_BOARD = 'event_click_board';
@@ -38,4 +51,5 @@ export const EVENT_RENDER_POW_PLAY = 'event_render_pow_play';
 export const EVENT_POW_PLAY = 'event_pow_play';
 export const EVENT_POW_PLAY_DONE = 'event_pow_play_done';
 export const EVENT_TIME_UP = 'event_time_up';
+
 

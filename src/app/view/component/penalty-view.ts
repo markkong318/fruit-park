@@ -24,7 +24,7 @@ export class PenaltyView extends View {
   public init() {
     this._graphics = new PIXI.Graphics();
     this._graphics.beginFill(0x000000, 0.5);
-    this._graphics.drawRect(- this.size.width / 2, - window.innerHeight / 2, this.size.width * 2, window.innerHeight * 2);
+    this._graphics.drawRect(- this.size.width / 2, - this.size.height / 2, this.size.width * 2, this.size.height * 2);
     this._graphics.interactive = true;
     this.addChild(this._graphics);
 
@@ -32,7 +32,6 @@ export class PenaltyView extends View {
   }
 
   public renderMask() {
-    console.log("render penalty")
     this.visible = this._gameModel.isPenalty;
   }
 }

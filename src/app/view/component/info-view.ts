@@ -9,7 +9,7 @@ import {
   EVENT_RENDER_POW,
   EVENT_RENDER_POW_PLAY,
   EVENT_RENDER_SCORE,
-  EVENT_RENDER_TIMER,
+  EVENT_RENDER_TIMER, TIME,
 } from "../../util/env";
 import Bottle from '../../../framework/bottle';
 import Event from "../../../framework/event";
@@ -63,7 +63,7 @@ export class InfoView extends View {
     this._timeTitle.position = new PIXI.Point(370, 10)
     this.addChild(this._timeTitle);
 
-    this._timeValue = new PIXI.Text('60', titleStyle);
+    this._timeValue = new PIXI.Text(`${TIME}`, titleStyle);
     this._timeValue.position = new PIXI.Point(388, 30)
     this.addChild(this._timeValue);
 
@@ -130,7 +130,6 @@ export class InfoView extends View {
             graphics.drawRect(20, 140, viewWidth - 20 * 2, 40);
             graphics.endFill();
 
-            console.log(val);
             graphics.beginFill(0xaaaaaa);
             graphics.drawRect(20, 140, (viewWidth - 20 * 2) * val / 100, 40);
             graphics.endFill();

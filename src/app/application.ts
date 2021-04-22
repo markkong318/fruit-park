@@ -12,6 +12,7 @@ import {Size} from "../framework/size";
 import Bottle from "../framework/bottle";
 import Event from "../framework/event";
 import {
+  EVENT_GAME_READY,
   EVENT_GAME_START,
   EVENT_SHUFFLE,
   FRUIT_ID_1,
@@ -72,7 +73,7 @@ export class Application extends PIXI.Application {
     this.resizeView();
 
     Event.emit(EVENT_SHUFFLE);
-    Event.emit(EVENT_GAME_START);
+    Event.emit(EVENT_GAME_READY);
   }
 
   public resizeView(): void {
