@@ -7,7 +7,6 @@ Game which is forked from `parcel-pixijs-quickstarter` and apply MVC
 
 ```bash
 # clone the repo.
-# --depth 1 removes all but one .git commit history (Optional).
 git clone https://github.com/markkong318/fruit-park.git
 
 # go to the repo
