@@ -9,10 +9,6 @@ import {InfoView} from "./component/info-view";
 import {ReadyView} from "./component/ready-view";
 
 export class GameView extends View {
-  private _gameModel: GameModel;
-
-  private _gameOverView: GameOverView;
-
   constructor() {
     super();
   }

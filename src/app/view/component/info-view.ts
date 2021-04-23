@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import gsap from 'gsap';
-import {parse, stringify} from 'flatted';
 
 import {View} from "../../../framework/view";
 import {GameModel} from "../../model/game-model";

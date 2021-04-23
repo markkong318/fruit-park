@@ -13,7 +13,6 @@ import Bottle from "../framework/bottle";
 import Event from "../framework/event";
 import {
   EVENT_GAME_READY,
-  EVENT_GAME_START,
   EVENT_SHUFFLE,
   FRUIT_ID_1,
   FRUIT_ID_2,
