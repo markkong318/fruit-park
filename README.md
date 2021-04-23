@@ -1,6 +1,6 @@
-# Slot
+# Fruit Park
 
-Slot game which is forked from `parcel-pixijs-quickstarter` and apply MVC
+Game which is forked from `parcel-pixijs-quickstarter` and apply MVC
 
 ### Quick start
 **Node version >= 8.0 (recommended 10.6.0) and NPM >= 5 (recommended 6.1.0)**
@@ -8,10 +8,10 @@ Slot game which is forked from `parcel-pixijs-quickstarter` and apply MVC
 ```bash
 # clone the repo.
 # --depth 1 removes all but one .git commit history (Optional).
-git clone --depth 1 https://github.com/llorenspujol/parcel-pixijs-quickstarter.git
+git clone https://github.com/markkong318/fruit-park.git
 
 # go to the repo
-cd parcel-pixijs-quickstarter
+cd fruit-park
 
 # install the dependencies via npm
 npm install
@@ -21,7 +21,7 @@ npm run start
 ```
 go to [http://localhost:1234](http://localhost:1234) in your browser. Done.
 
-DEMO: [https://markkong318.github.io/slot/](https://markkong318.github.io/slot/)
+DEMO: [https://markkong318.github.io/fruit-park/](https://markkong318.github.io/fruit-park/)
 
 ### npm scripts
 
