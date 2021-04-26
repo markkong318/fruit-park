@@ -115,6 +115,14 @@ export class BoardView extends View {
   public renderPoints() {
     this._timeline.clear();
 
+    for (let i = 0; i < BOARD_COLUMN; i++) {
+      for (let j = 0; j < BOARD_ROW; j++) {
+        this._newSprites[i][j].alpha = 0;
+        this._oldSprites[i][j].alpha = 0;
+        this._boardSprites[i][j].alpha = 1;
+      }
+    }
+
     const newPoints = this._gameModel.newPoints;
     for (let i = 0; i < newPoints.length; i++) {
       const [x, y] = newPoints[i];
